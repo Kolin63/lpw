@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# LPW: Line Print Wrapper
+# Made by Colin Melican <colinmelican@gmail.com>
+# https://github.com/kolin63/lpw
+
+function print_help() {
+  echo "LPW - Line Print Wrapper"
+  echo "usage: lpw [-n] [-p program] [args]"
+  echo ""
+  echo "Options:"
+  echo "  -n    Disables config"
+  echo ""
+  echo "  -p program"
+  echo "        Sets what program is being wrapped. Set to lp by default"
+  echo ""
+  echo "Configuration:"
+  echo "A config file is first checked for at \$XDG_CONFIG_HOME/lpw/lpw.conf,"
+  echo "and then at \$HOME/.lpw"
+}
+
+if [[ $# -eq 0 ]]; then print_help; fi
