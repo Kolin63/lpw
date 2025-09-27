@@ -17,8 +17,49 @@ function print_help() {
   echo "  args  All other arguments will be passed to the wrapped program"
   echo ""
   echo "Configuration:"
-  echo "A config file is first checked for at \$XDG_CONFIG_HOME/lpw/lpw.conf,"
-  echo "and then at \$HOME/.lpw"
+  echo "A config file is checked for at \$HOME/.lpw"
 }
 
-if [[ $# -eq 0 ]]; then print_help; fi
+if [[ $# -eq 0 ]]; then
+  print_help
+  exit 0
+fi
+
+# external args to be passed to wrapped program
+ext_args=""
+
+arg_config="$HOME/.lpw"
+arg_program="lp"
+
+# iterate through args
+waiting=""
+for ((i=1; i<=$#; i++)); do
+  arg="${!i}"
+
+  if   [[ "$waiting" == "-u" ]]; then
+    arg_config="$arg"
+    waiting=""
+  elif [[ "$waiting" == "-p" ]]; then
+    arg_program="$arg"
+    waiting=""
+  elif [[ "$arg" == "-u" ]]; then waiting="$arg"
+  elif [[ "$arg" == "-p" ]]; then waiting="$arg"
+  else
+    ext_args="$ext_args$arg "
+  fi
+done
+
+# get config file contents
+config_text=""
+if [[ -e "$arg_config" ]]; then
+  config_text="$(cat $arg_config)"
+fi
+
+# parse config file
+config_args=($config_text)
+for ((i=0; i<${#config_args[@]}; i++)); do
+  ext_args="$ext_args${config_args[i]} "
+done
+
+echo "$arg_config"
+echo "lp $ext_args"
