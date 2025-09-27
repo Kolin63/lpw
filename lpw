@@ -5,10 +5,11 @@
 
 function print_help() {
   echo "LPW - Line Print Wrapper"
-  echo "usage: lpw [-n] [-p program] [args]"
+  echo "usage: lpw [-u config] [-p program] [args]"
   echo ""
   echo "Options:"
-  echo "  -n    Disables config"
+  echo "  -u config"
+  echo "        Use this config file"
   echo ""
   echo "  -p program"
   echo "        Sets what program is being wrapped. Set to lp by default"
