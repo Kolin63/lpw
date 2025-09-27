@@ -57,9 +57,10 @@ fi
 
 # parse config file
 config_args=($config_text)
+ext_args_file=""
 for ((i=0; i<${#config_args[@]}; i++)); do
-  ext_args="$ext_args${config_args[i]} "
+  ext_args_file="$ext_args_file${config_args[i]} "
 done
 
 echo "$arg_config"
-echo "lp $ext_args"
+echo "lp $ext_args_file$ext_args"
