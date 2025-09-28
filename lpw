@@ -45,6 +45,9 @@ for ((i=1; i<=$#; i++)); do
   elif [[ "$arg" == "-u" ]]; then waiting="$arg"
   elif [[ "$arg" == "-C" ]]; then arg_nocolor=1
   elif [[ "$arg" == "-I" ]]; then arg_nodynamicui=1
+  elif [[ "$arg" == "-CI" ]] || [[ "$arg" == "-IC" ]]; then
+    arg_nocolor=1
+    arg_nodynamicui=1
   else
     ext_args="$ext_args$arg "
   fi
