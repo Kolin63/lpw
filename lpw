@@ -5,7 +5,7 @@
 
 function print_help() {
   echo "LPW - Line Print Wrapper"
-  echo "usage: lpw [-u config] [-p program] <args>"
+  echo "usage: lpw [-u config] <args>"
   echo ""
   echo "Options:"
   echo "  -u config"
