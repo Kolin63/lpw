@@ -50,6 +50,7 @@ else
 fi
 
 # parse config file
+# TODO: remove any conflicting options
 config_args=($config_text)
 ext_args_file=""
 for ((i=0; i<${#config_args[@]}; i++)); do
@@ -63,5 +64,58 @@ if [[ "$ext_args" == "" ]]; then
   exit 0
 fi
 
-echo "$arg_config"
-echo "lp $ext_args_file$ext_args"
+set_copies=1
+set_pages="all"
+set_sides="one-sided"
+
+# TODO: update these variables based on user cli input
+
+# user input loop
+while true; do
+  # get choice
+  echo "1) Copies  [$set_copies]"
+  echo "2) Pages   [$set_pages]"
+  echo "3) Sides   [$set_sides]"
+  echo "4) Custom"
+  echo "5) Done"
+  echo -n "> "
+  read choice
+
+  if [[ choice -eq 1 ]]; then
+    input=0
+    while [[ ! input -ge 1 ]]; do
+      echo "Set amount of copies:"
+      echo -n "> "
+      read input
+    done
+    set_copies=$input
+  elif [[ choice -eq 2 ]]; then
+    input="all"
+    echo "Set pages to print (all, odd, even, 3, 3-5)"
+    echo -n "> "
+    read input
+    set_pages=$input
+  elif [[ choice -eq 3 ]]; then
+    input=0
+    while [[ ! input -ge 1 ]] && [[ ! input -le 3 ]]; do
+      echo "1) one sided"
+      echo "2) two sided, flip on long edge"
+      echo "3) two sided, flip on short edge"
+      echo -n "> "
+      read input
+    done
+    if   [[ input -eq 1 ]]; then set_sides="one-sided";
+    elif [[ input -eq 2 ]]; then set_sides="two-sided-long-edge";
+    elif [[ input -eq 3 ]]; then set_sides="two-sided-short-edge";
+    fi
+  elif [[ choice -eq 4 ]]; then
+    echo "Enter an argument to pass to lp"
+    echo -n "> "
+    read input
+    ext_args_file="$ext_args_file$input "
+  elif [[ choice -eq 5 ]]; then
+    break
+  else
+    echo "Invalid choice $choice"
+  fi
+done
