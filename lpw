@@ -66,7 +66,39 @@ fi
 set_copies=1
 set_pages="all"
 set_sides="one-sided"
-# TODO: update these variables based on user cli input
+
+# update settings based on cli or config arguments
+combined_text="$ext_args_file$ext_args"
+combined=($combined_text)
+opt_wait=0
+for ((i=0; i<${#combined[@]}; i++)); do
+  opt="${combined[i]}"
+
+  if [[ "$opt" == "-o" ]]; then
+    opt_wait=1
+    continue
+  elif [[ opt_wait -eq 0 ]]; then
+    continue
+  fi
+
+  # get option name and value
+  opt_wait=0
+  opt_name=""
+  opt_value="$opt"
+  while [[ "${opt_value:0:1}" != "=" ]] && [[ "$opt_value" != "" ]]; do
+    opt_name="$opt_name${opt_value:0:1}"
+    opt_value="${opt_value:1}"
+  done
+  opt_value="${opt_value:1}"
+  name_len=${#opt_name}
+
+  # update the values
+  if [[ "$opt_name" == "copies" ]]; then set_copies="$opt_value"
+  elif [[ "$opt_name" == "page-set" ]]; then set_pages="$opt_value"
+  elif [[ "$opt_name" == "page-ranges" ]]; then set_pages="$opt_value"
+  elif [[ "$opt_name" == "sides" ]]; then set_sides="$opt_value"
+  fi
+done
 
 # user input loop
 while true; do
