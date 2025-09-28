@@ -1,6 +1,8 @@
 # 🖨️ LPW
 Line Print Wrapper for Linux.
 
+![demo](demo.gif)
+
 ## ⭐ Features
 * 🖨️ Seamless integration with lp
 * 🔧 Easily set printing parameters
