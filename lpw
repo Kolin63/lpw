@@ -50,7 +50,6 @@ else
 fi
 
 # parse config file
-# TODO: remove any conflicting options
 config_args=($config_text)
 ext_args_file=""
 for ((i=0; i<${#config_args[@]}; i++)); do
@@ -67,6 +66,7 @@ fi
 set_copies=1
 set_pages="all"
 set_sides="one-sided"
+# TODO: update these variables based on user cli input
 
 # user input loop
 while true; do
