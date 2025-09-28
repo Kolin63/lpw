@@ -1,5 +1,5 @@
 # 🖨️ LPW
-Line Print Wrapper for Linux.
+Line Print Wrapper for Linux and Mac.
 
 ![demo](demo.gif)
 
@@ -14,6 +14,7 @@ To install on Linux, run this script:
 sudo wget https://raw.githubusercontent.com/Kolin63/lpw/refs/heads/main/lpw -O /usr/bin/lpw
 sudo chmod +x /usr/bin/lpw
 ```
+To install on Mac, place the `lpw` script file somewhere that is in your path.
 
 ## 📖 Usage
 Since LPW is a wrapper of lp, there are few arguments that are unique to LPW.
