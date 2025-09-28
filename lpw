@@ -10,10 +10,11 @@ c_lightblue="\e[1;94m"
 
 function print_help() {
   echo "LPW - Line Print Wrapper"
-  echo "usage: lpw [-C] [-u config] <args>"
+  echo "usage: lpw [-CI] [-u config] <args>"
   echo ""
   echo "Options:"
   echo "  -C          Disable color in text UI"
+  echo "  -I          Disable dynamic UI"
   echo "  -u config   Use this config file"
   echo "  args        All other arguments will be passed to the wrapped program"
   echo ""
@@ -30,6 +31,7 @@ fi
 ext_args=""
 
 arg_nocolor=0
+arg_nodynamicui=0
 arg_config="$HOME/.lpw"
 
 # iterate through args
@@ -42,6 +44,7 @@ for ((i=1; i<=$#; i++)); do
     waiting=""
   elif [[ "$arg" == "-u" ]]; then waiting="$arg"
   elif [[ "$arg" == "-C" ]]; then arg_nocolor=1
+  elif [[ "$arg" == "-I" ]]; then arg_nodynamicui=1
   else
     ext_args="$ext_args$arg "
   fi
@@ -189,6 +192,16 @@ function make_final_args() {
   done
 }
 
+# clears n lines above cursor
+# parameters: n
+function clear_above() {
+  if [[ arg_nodynamicui -eq 0 ]]; then
+    for ((i=0; i<$1; i++)); do
+      echo -ne "\e[1A\e[2K"
+    done
+  fi
+}
+
 # user input loop
 while true; do
   # get choice
@@ -198,8 +211,12 @@ while true; do
   echo "3) Sides   [$set_sides]"
   echo "4) Custom"
   echo "5) Done"
-  echo -n "> "
+  echo -ne $c_reset"> "
+  echo -ne $c_lightyellow
   read choice
+  echo -ne $c_reset
+
+  clear_above 7
 
   if [[ choice -eq 1 ]]; then
     input=0
@@ -211,6 +228,7 @@ while true; do
       echo -ne $c_reset
     done
     set_copies=$input
+    clear_above 2
   elif [[ choice -eq 2 ]]; then
     input="all"
     echo -e $c_lightblue"Set pages to print (all, odd, even, 3, 3-5)"
@@ -219,10 +237,12 @@ while true; do
     read input
     echo -ne $c_reset
     set_pages=$input
+    clear_above 2
   elif [[ choice -eq 3 ]]; then
     input=0
-    while [[ ! input -ge 1 ]] && [[ ! input -le 3 ]]; do
+    while [[ input -lt 1 ]] || [[ input -gt 3 ]]; do
       echo -e $c_lightblue"Select an option:"
+      echo -ne $c_reset
       echo "1) one sided"
       echo "2) two sided, flip on long edge"
       echo "3) two sided, flip on short edge"
@@ -230,6 +250,7 @@ while true; do
       echo -ne $c_lightyellow
       read input
       echo -ne $c_reset
+      clear_above 5
     done
     if   [[ input -eq 1 ]]; then set_sides="one-sided";
     elif [[ input -eq 2 ]]; then set_sides="two-sided-long-edge";
@@ -240,8 +261,9 @@ while true; do
     echo -ne $c_reset"> "
     echo -ne $c_lightyellow
     read input
-    echo -e $c_reset
+    echo -ne $c_reset
     ext_args_file="$ext_args_file$input "
+    clear_above 2
   elif [[ choice -eq 5 ]]; then
     ext_args_file="$ext_args_file-o copies=$set_copies "
     if [[ "$set_pages" == "all" ]] ||
@@ -260,14 +282,13 @@ while true; do
       echo -ne $c_reset"> "
       echo -ne $c_lightyellow
       read input
-      echo -e $c_reset
+      echo -ne $c_reset
+      clear_above 3
     done
     if [[ "$input" == "y" ]]; then
       echo "Printing..."
       lp $final_args
       break
     fi
-  else
-    echo "Invalid choice $choice"
   fi
 done
