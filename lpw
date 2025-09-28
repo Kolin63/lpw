@@ -67,6 +67,28 @@ set_copies=1
 set_pages="all"
 set_sides="one-sided"
 
+n_check=($ext_args_file)
+ext_args_file=""
+n_wait=0
+for ((i=0; i<${#n_check}; i++)); do
+  opt="${n_check[i]}"
+  if [[ "$opt" == "-n" ]]; then n_wait=1
+  elif [[ n_wait -eq 0 ]]; then ext_args_file="$ext_args_file$opt "
+  elif [[ n_wait -eq 1 ]]; then ext_args_file="$ext_args_file-o copies=$opt "
+  fi
+done
+
+n_check=($ext_args)
+ext_args=""
+n_wait=0
+for ((i=0; i<${#n_check}; i++)); do
+  opt="${n_check[i]}"
+  if [[ "$opt" == "-n" ]]; then n_wait=1
+  elif [[ n_wait -eq 0 ]]; then ext_args="$ext_args$opt "
+  elif [[ n_wait -eq 1 ]]; then ext_args="$ext_args-o copies=$opt "
+  fi
+done
+
 # update settings based on cli or config arguments
 combined_text="$ext_args_file$ext_args"
 combined=($combined_text)
@@ -94,6 +116,7 @@ for ((i=0; i<${#combined[@]}; i++)); do
     opt_value="${opt_value:1}"
   done
   opt_value="${opt_value:1}"
+  name_len=${#opt_name}
 
   # update the values
   if [[ "$opt_name" == "copies" ]]; then set_copies="$opt_value"
@@ -154,7 +177,10 @@ while true; do
   fi
 done
 
+combined_text="$ext_args_file$ext_args"
+combined=($combined_text)
 final_args=""
+opt_wait=0
 for ((i=0; i<${#combined[@]}; i++)); do
   opt="${combined[i]}"
 
