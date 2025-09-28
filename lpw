@@ -90,7 +90,6 @@ for ((i=0; i<${#combined[@]}; i++)); do
     opt_value="${opt_value:1}"
   done
   opt_value="${opt_value:1}"
-  name_len=${#opt_name}
 
   # update the values
   if [[ "$opt_name" == "copies" ]]; then set_copies="$opt_value"
@@ -150,10 +149,7 @@ while true; do
   fi
 done
 
-combined_text="$ext_args_file$ext_args"
-combined=($combined_text)
 final_args=""
-opt_wait=0
 for ((i=0; i<${#combined[@]}; i++)); do
   opt="${combined[i]}"
 
