@@ -5,7 +5,7 @@
 
 function print_help() {
   echo "LPW - Line Print Wrapper"
-  echo "usage: lpw [-u config] [-p program] [args]"
+  echo "usage: lpw [-u config] [-p program] <args>"
   echo ""
   echo "Options:"
   echo "  -u config"
@@ -61,6 +61,13 @@ ext_args_file=""
 for ((i=0; i<${#config_args[@]}; i++)); do
   ext_args_file="$ext_args_file${config_args[i]} "
 done
+
+# check that there are external args
+if [[ "$ext_args" == "" ]]; then
+  echo "Error: args required for wrapped printer"
+  print_help
+  exit 0
+fi
 
 echo "$arg_config"
 echo "lp $ext_args_file$ext_args"
